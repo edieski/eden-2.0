@@ -126,7 +126,7 @@ function DraggableItem({ item, onUpdate, onDelete }: DraggableItemProps) {
 export default function VisionBoardPage() {
   const supabase = createClient();
   const [items, setItems] = useState<VisionBoardItem[]>([]);
-  const [panel, setPanel] = useState<"text" | "affirmation" | "image" | null>(null);
+  const [panel, setPanel] = useState<"text" | "affirmation" | null>(null);
   const [textInput, setTextInput] = useState("");
   const [bgColor, setBgColor] = useState("#FAE8EC");
   const [textColor, setTextColor] = useState("#3D3535");
