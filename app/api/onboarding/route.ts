@@ -84,23 +84,15 @@ export async function POST(req: NextRequest) {
   }
 
   // Run DB writes in parallel
-  const writes = [
-    supabase.from("profiles").update({ onboarded: true }).eq("id", user.id),
-  ];
+  await supabase.from("profiles").update({ onboarded: true }).eq("id", user.id);
 
-  // Update preferred name in profile if provided
   if (preferredName?.trim()) {
-    writes.push(
-      supabase.from("profiles").update({ name: preferredName.trim() }).eq("id", user.id)
-    );
+    await supabase.from("profiles").update({ name: preferredName.trim() }).eq("id", user.id);
   }
 
-  // Insert memories
   if (memories.length > 0) {
-    writes.push(supabase.from("user_memories").insert(memories));
+    await supabase.from("user_memories").insert(memories);
   }
-
-  await Promise.all(writes);
 
   return NextResponse.json({ ok: true });
 }
