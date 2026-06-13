@@ -30,17 +30,22 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isAuthRoute = pathname.startsWith("/login") || pathname.startsWith("/signup");
+  const isAuthRoute =
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/forgot-password");
+  const isResetPassword = pathname.startsWith("/reset-password");
+  const isAuthCallback = pathname.startsWith("/auth/callback");
   const isOnboarding = pathname.startsWith("/onboarding");
   const isRoot = pathname === "/";
 
-  if (!user && !isAuthRoute) {
+  if (!user && !isAuthRoute && !isResetPassword && !isAuthCallback) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && (isAuthRoute || isRoot)) {
+  if (user && (isAuthRoute || isRoot) && !isResetPassword) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

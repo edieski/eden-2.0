@@ -309,6 +309,34 @@
 .grid-focus  { display: grid; grid-template-columns: 1fr 280px; }
 .grid-fee-form { display: grid; grid-template-columns: 1fr 160px 110px; }
 
+/* ── To-do add form ────────────────────────────────────── */
+.todo-add-form { display: flex; gap: 10px; align-items: flex-end; }
+.todo-add-input { flex: 1; min-width: 0; }
+.todo-add-meta { display: flex; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+.todo-priority-group { display: flex; gap: 6px; }
+
+/* Explicit field text — survives iOS autofill / blend quirks */
+.eden-field,
+.eden-field:focus,
+.eden-field:active {
+  color: #3D3535;
+  -webkit-text-fill-color: #3D3535;
+  caret-color: #3D3535;
+}
+.eden-field::placeholder {
+  color: #C4B8B8;
+  -webkit-text-fill-color: #C4B8B8;
+  opacity: 1;
+}
+input.eden-field:-webkit-autofill,
+input.eden-field:-webkit-autofill:focus,
+textarea.eden-field:-webkit-autofill,
+textarea.eden-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #3D3535 !important;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+}
+
 /* ── Page padding ──────────────────────────────────────── */
 .page-padding { padding: 40px 48px; }
 
@@ -322,8 +350,27 @@
 @media (max-width: 767px) {
   * { -webkit-tap-highlight-color: transparent; }
 
-  /* Prevent iOS zoom on inputs */
-  input, select, textarea { font-size: 16px !important; }
+  /* Prevent iOS zoom + keep typed text visible (WebKit blend/autofill bugs) */
+  input, select, textarea {
+    font-size: 16px !important;
+    color: #3D3535 !important;
+    -webkit-text-fill-color: #3D3535 !important;
+    caret-color: #3D3535;
+    opacity: 1 !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #C4B8B8 !important;
+    -webkit-text-fill-color: #C4B8B8 !important;
+    opacity: 1;
+  }
+
+  /* mix-blend-mode on the grain overlay makes input text invisible on mobile Safari */
+  html::before {
+    mix-blend-mode: normal;
+    opacity: 0.035;
+  }
 
   /* ── Sidebar becomes a fixed overlay drawer ── */
   .sidebar-drawer {
@@ -452,6 +499,43 @@
   /* ── Buttons / interactive tap targets ── */
   button, a, [role="button"] {
     min-height: 36px;
+  }
+
+  /* ── To-do: stack add-task form so input stays visible ── */
+  .todo-add-form {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .todo-add-input,
+  .todo-add-input > div,
+  .todo-add-input input {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .todo-add-input input {
+    position: relative;
+    z-index: 2;
+    isolation: isolate;
+  }
+  .todo-add-meta {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .todo-priority-group {
+    flex: 1;
+    min-width: 0;
+  }
+  .todo-priority-group button {
+    flex: 1;
+    min-width: 0;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .todo-wheel-panel {
+    position: static !important;
+    top: auto !important;
   }
 }
 

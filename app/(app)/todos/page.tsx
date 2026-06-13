@@ -2222,16 +2222,22 @@ export default function TodosPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Add task */}
           <Card padding="sm">
-            <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-              <div style={{ flex: 1 }}>
+            <div className="todo-add-form">
+              <div className="todo-add-input">
                 <Input
                   placeholder="Add a task…"
                   value={newText}
                   onChange={(e) => setNewText(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addTodo()}
+                  onFocus={(e) => {
+                    window.setTimeout(() => {
+                      e.currentTarget.scrollIntoView({ block: "center", behavior: "smooth" });
+                    }, 300);
+                  }}
                 />
               </div>
-              <div style={{ display: "flex", gap: "6px" }}>
+              <div className="todo-add-meta">
+              <div className="todo-priority-group">
                 {(["low", "medium", "high"] as const).map((p) => (
                   <button
                     key={p}
@@ -2257,6 +2263,7 @@ export default function TodosPage() {
               <Button onClick={addTodo} size="md" disabled={!newText.trim()}>
                 <Plus size={15} /> Add
               </Button>
+              </div>
             </div>
           </Card>
 
@@ -2475,7 +2482,7 @@ export default function TodosPage() {
         </div>
 
         {/* Right — Spin wheel */}
-        <div style={{ position: "sticky", top: "40px" }}>
+        <div className="todo-wheel-panel" style={{ position: "sticky", top: "40px" }}>
           <Card variant="cream">
             <CardTitle style={{ marginBottom: "20px", textAlign: "center" }}>Spin the Wheel</CardTitle>
             <SpinWheel tasks={todos} onResult={handleWheelResult} />

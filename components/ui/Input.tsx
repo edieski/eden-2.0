@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, hint, id, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex w-full min-w-0 flex-col gap-1.5">
         {label && (
           <label
             htmlFor={inputId}
@@ -24,7 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-4 py-3 rounded-xl border text-[14px] text-[#3D3535] placeholder:text-[#C4B8B8] bg-white",
+            "eden-field w-full min-w-0 px-4 py-3 rounded-xl border text-[14px] text-[#3D3535] placeholder:text-[#C4B8B8] bg-white",
             "border-[#EDE5E5] focus:border-[#F2C4CE] focus:outline-none focus:ring-2 focus:ring-[#F2C4CE]/20",
             "transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed",
             error && "border-[#E8A0B0] focus:border-[#E8A0B0]",
@@ -54,7 +54,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, label, error, hint, id, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex w-full min-w-0 flex-col gap-1.5">
         {label && (
           <label
             htmlFor={inputId}
@@ -67,7 +67,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-4 py-3 rounded-xl border text-[14px] text-[#3D3535] placeholder:text-[#C4B8B8] bg-white resize-none",
+            "eden-field w-full min-w-0 px-4 py-3 rounded-xl border text-[14px] text-[#3D3535] placeholder:text-[#C4B8B8] bg-white resize-none",
             "border-[#EDE5E5] focus:border-[#F2C4CE] focus:outline-none focus:ring-2 focus:ring-[#F2C4CE]/20",
             "transition-all duration-150 disabled:opacity-50",
             error && "border-[#E8A0B0]",

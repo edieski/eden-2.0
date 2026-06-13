@@ -245,7 +245,7 @@ Respond ONLY with valid JSON:
   if (!emailTo) return NextResponse.json({ error: "No email on account" }, { status: 400 });
 
   const { error: sendError } = await resend.emails.send({
-    from: "Eden ✦ <eden@yourdomain.com>",
+    from: "Eden ✦ <onboarding@resend.dev>",
     to: emailTo,
     subject: `Good morning, ${name} ✦ here's your day`,
     html,

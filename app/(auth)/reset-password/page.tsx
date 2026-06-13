@@ -5,19 +5,31 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
   const supabase = createClient();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.updateUser({ password });
+
     if (error) {
       setError(error.message);
       setLoading(false);
@@ -29,7 +41,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex">
-      {/* Left — decorative panel */}
       <div
         className="hidden lg:flex lg:w-1/2 flex-col justify-between p-16"
         style={{ background: "linear-gradient(160deg, #F2C4CE 0%, #FAE8EC 40%, #EDE5F5 70%, #D8E4D6 100%)" }}
@@ -48,32 +59,10 @@ export default function LoginPage() {
             Every day is a<br />
             <em>new beginning.</em>
           </p>
-          <p style={{ marginTop: "24px", color: "#6B5E5E", fontSize: "15px", lineHeight: 1.7, maxWidth: "380px" }}>
-            Your personal space for growth, discipline, and becoming the most beautiful version of yourself — inside and out.
-          </p>
         </div>
-        <div style={{ display: "flex", gap: "8px" }}>
-          {["Health", "Mind", "Home", "Purpose"].map((p) => (
-            <span
-              key={p}
-              style={{
-                padding: "4px 14px",
-                borderRadius: "99px",
-                fontSize: "12px",
-                fontWeight: 500,
-                letterSpacing: "0.05em",
-                background: "rgba(255,255,255,0.5)",
-                color: "#3D3535",
-                border: "1px solid rgba(255,255,255,0.6)",
-              }}
-            >
-              {p}
-            </span>
-          ))}
-        </div>
+        <div />
       </div>
 
-      {/* Right — form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div style={{ width: "100%", maxWidth: "400px" }}>
           <div style={{ marginBottom: "48px" }}>
@@ -86,24 +75,25 @@ export default function LoginPage() {
             <h1
               style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "36px", fontWeight: 400, color: "#3D3535", marginBottom: "8px" }}
             >
-              Welcome back
+              Choose a new password
             </h1>
             <p style={{ color: "#9B8E8E", fontSize: "14px" }}>
-              Sign in to continue your transformation.
+              Enter your new password below.
             </p>
           </div>
 
-          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div>
               <label style={{ display: "block", fontSize: "12px", fontWeight: 500, letterSpacing: "0.06em", color: "#6B5E5E", textTransform: "uppercase", marginBottom: "8px" }}>
-                Email
+                New password
               </label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="you@email.com"
+                minLength={8}
+                placeholder="••••••••"
                 style={{
                   width: "100%",
                   padding: "12px 16px",
@@ -121,19 +111,15 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                <label style={{ fontSize: "12px", fontWeight: 500, letterSpacing: "0.06em", color: "#6B5E5E", textTransform: "uppercase" }}>
-                  Password
-                </label>
-                <Link href="/forgot-password" style={{ fontSize: "12px", color: "#C0607A", textDecoration: "none", fontWeight: 500 }}>
-                  Forgot password?
-                </Link>
-              </div>
+              <label style={{ display: "block", fontSize: "12px", fontWeight: 500, letterSpacing: "0.06em", color: "#6B5E5E", textTransform: "uppercase", marginBottom: "8px" }}>
+                Confirm password
+              </label>
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                minLength={8}
                 placeholder="••••••••"
                 style={{
                   width: "100%",
@@ -171,19 +157,17 @@ export default function LoginPage() {
                 letterSpacing: "0.04em",
                 border: "none",
                 cursor: loading ? "not-allowed" : "pointer",
-                transition: "background 0.2s, transform 0.1s",
+                transition: "background 0.2s",
               }}
-              onMouseEnter={(e) => { if (!loading) (e.currentTarget.style.background = "#2A2020"); }}
-              onMouseLeave={(e) => { if (!loading) (e.currentTarget.style.background = "#3D3535"); }}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Updating..." : "Update password"}
             </button>
           </form>
 
           <p style={{ marginTop: "32px", textAlign: "center", fontSize: "14px", color: "#9B8E8E" }}>
-            New here?{" "}
-            <Link href="/signup" style={{ color: "#C0607A", textDecoration: "none", fontWeight: 500 }}>
-              Create your account
+            Link expired?{" "}
+            <Link href="/forgot-password" style={{ color: "#C0607A", textDecoration: "none", fontWeight: 500 }}>
+              Request a new one
             </Link>
           </p>
         </div>
