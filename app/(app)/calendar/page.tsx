@@ -200,8 +200,8 @@ function EventModal({
                     color: "#3D3535", outline: "none", fontFamily: "inherit",
                     background: "white", transition: "border-color 0.2s",
                   }}
-                  onFocus={(e) => (e.style.borderColor = "#F2C4CE")}
-                  onBlur={(e) => (e.style.borderColor = "#EDE5E5")}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "#F2C4CE")}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = "#EDE5E5")}
                 />
                 <span style={{ fontSize: "12px", color: "#9B8E8E" }}>–</span>
                 <input
@@ -214,8 +214,8 @@ function EventModal({
                     color: "#3D3535", outline: "none", fontFamily: "inherit",
                     background: "white", transition: "border-color 0.2s",
                   }}
-                  onFocus={(e) => (e.style.borderColor = "#F2C4CE")}
-                  onBlur={(e) => (e.style.borderColor = "#EDE5E5")}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "#F2C4CE")}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = "#EDE5E5")}
                 />
               </div>
             )}

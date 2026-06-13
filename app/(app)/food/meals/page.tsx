@@ -95,7 +95,7 @@ export default function MealPlanPage() {
                 return (
                   <div key={`${mt.value}-${dayIdx}`} style={{ padding: "4px", minHeight: "80px" }}>
                     {dayMeals.map((meal) => (
-                      <div key={meal.id} style={{ padding: "8px 10px", borderRadius: "10px", background: MEAL_COLORS[mt.value], marginBottom: "4px", position: "relative", group: "true" as unknown as undefined }}>
+                      <div key={meal.id} style={{ padding: "8px 10px", borderRadius: "10px", background: MEAL_COLORS[mt.value], marginBottom: "4px", position: "relative" }}>
                         <p style={{ fontSize: "12px", fontWeight: 500, color: "#3D3535", lineHeight: 1.4 }}>{meal.title}</p>
                         {meal.description && <p style={{ fontSize: "11px", color: "#9B8E8E", marginTop: "2px" }}>{meal.description}</p>}
                         <button
