@@ -84,8 +84,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Run DB writes in parallel
-  const writes: Promise<unknown>[] = [
-    // Mark user as onboarded
+  const writes = [
     supabase.from("profiles").update({ onboarded: true }).eq("id", user.id),
   ];
 
