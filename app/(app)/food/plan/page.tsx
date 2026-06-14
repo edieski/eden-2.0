@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import {
   Camera, Upload, X, Sparkles, Check, ShoppingCart,
-  ChevronDown, ChevronUp, Plus, Trash2,
+  ChevronDown, ChevronUp, Plus, Trash2, Timer, Receipt,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card, { CardTitle } from "@/components/ui/Card";
@@ -35,6 +35,7 @@ interface ScanMeal {
   selected: boolean;
 }
 interface ScanGrocery { name: string; quantity: string; category: string; selected: boolean }
+interface PrepSession { day_index: number; label: string; duration_minutes: number; tasks: string[] }
 
 function groupGroceryByCategory<T extends { category: string }>(items: T[]) {
   return CATEGORY_ORDER.reduce<Record<string, T[]>>((acc, cat) => {
@@ -134,6 +135,8 @@ export default function MenuPlanPage() {
   const [numDays, setNumDays] = useState(7);
   const [planNumDays, setPlanNumDays] = useState(7);
   const [summary, setSummary] = useState("");
+  const [budgetTip, setBudgetTip] = useState("");
+  const [prepSchedule, setPrepSchedule] = useState<PrepSession[]>([]);
   const [detectedFoods, setDetectedFoods] = useState<{ name: string; type: string }[]>([]);
   const [scanMeals, setScanMeals] = useState<ScanMeal[]>([]);
   const [scanGrocery, setScanGrocery] = useState<ScanGrocery[]>([]);
@@ -213,6 +216,8 @@ export default function MenuPlanPage() {
       if (!res.ok) throw new Error(data.error ?? "Scan failed");
       setPlanNumDays(data.num_days ?? numDays);
       setSummary(data.summary ?? "");
+      setBudgetTip(data.budget_tip ?? "");
+      setPrepSchedule(data.prep_schedule ?? []);
       setDetectedFoods(data.detected_foods ?? []);
       setScanMeals((data.menu ?? []).map((m: Omit<ScanMeal, "selected">) => ({ ...m, selected: true })));
       setScanGrocery((data.grocery_list ?? []).map((g: Omit<ScanGrocery, "selected">) => ({ ...g, selected: true })));
@@ -228,6 +233,8 @@ export default function MenuPlanPage() {
     setPhase("idle");
     setImages([]);
     setSummary("");
+    setBudgetTip("");
+    setPrepSchedule([]);
     setDetectedFoods([]);
     setScanMeals([]);
     setScanGrocery([]);
@@ -355,7 +362,7 @@ export default function MenuPlanPage() {
           Menu & <em>Grocery</em>
         </h1>
         <p style={{ color: "#9B8E8E", fontSize: "14px", marginTop: "6px" }}>
-          Upload meal photos — Eden plans your menu with ingredients you can find at a French supermarket
+          Budget-friendly meal prep — batch cook once, eat all week, shop at a French supermarket
         </p>
       </div>
 
@@ -363,7 +370,7 @@ export default function MenuPlanPage() {
       <Card style={{ marginBottom: "24px" }}>
         <CardTitle>Photo scan</CardTitle>
         <p style={{ fontSize: "13px", color: "#9B8E8E", marginBottom: "16px", lineHeight: 1.6 }}>
-          Snap dishes you love, fridge contents, recipe screenshots — add dozens of photos if you want. Ingredients and grocery lists use French supermarket names (Carrefour, Leclerc, etc.) with metric quantities.
+          Upload meal inspiration — Eden builds a budget meal-prep plan: batch-cook sessions, ingredient reuse, one consolidated shop list (Carrefour, Leclerc, Lidl…).
         </p>
 
         {/* Days picker — visible before/during upload */}
@@ -491,7 +498,7 @@ export default function MenuPlanPage() {
             </div>
             <p style={{ fontSize: "15px", fontWeight: 500, color: "#3D3535" }}>Planning your {numDays}-day menu…</p>
             <p style={{ fontSize: "13px", color: "#9B8E8E", marginTop: "4px" }}>
-              Reviewing {images.length} photo{images.length !== 1 ? "s" : ""} and building your plan
+              Building a budget meal-prep plan from {images.length} photo{images.length !== 1 ? "s" : ""}
             </p>
           </div>
         )}
@@ -503,6 +510,37 @@ export default function MenuPlanPage() {
                 {summary}
               </p>
             )}
+            {budgetTip && (
+              <p style={{ fontSize: "13px", color: "#6A5A40", lineHeight: 1.5, marginBottom: "12px", padding: "10px 14px", borderRadius: "10px", background: "#F5F0E4", display: "flex", gap: "8px", alignItems: "flex-start" }}>
+                <Receipt size={14} color="#9B8E6E" style={{ flexShrink: 0, marginTop: "2px" }} />
+                <span><strong style={{ fontWeight: 600 }}>Budget tip:</strong> {budgetTip}</span>
+              </p>
+            )}
+
+            {prepSchedule.length > 0 && (
+              <div style={{ marginBottom: "20px", padding: "16px", borderRadius: "14px", background: "#F0F4F0", border: "1px solid #D8E4D6" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+                  <Timer size={16} color={accent} />
+                  <span style={{ fontSize: "15px", fontWeight: 600, color: "#3D3535" }}>Meal prep schedule</span>
+                </div>
+                {prepSchedule.map((session, i) => (
+                  <div key={i} style={{ marginBottom: i < prepSchedule.length - 1 ? "14px" : 0 }}>
+                    <p style={{ fontSize: "12px", fontWeight: 600, color: "#6A8A68", marginBottom: "6px" }}>
+                      Day {session.day_index + 1} · {session.label}
+                      {session.duration_minutes > 0 && (
+                        <span style={{ fontWeight: 400, color: "#9B8E8E" }}> — ~{session.duration_minutes} min</span>
+                      )}
+                    </p>
+                    <ul style={{ margin: 0, paddingLeft: "18px" }}>
+                      {session.tasks.map((task, j) => (
+                        <li key={j} style={{ fontSize: "13px", color: "#3D3535", lineHeight: 1.5, marginBottom: "4px" }}>{task}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {detectedFoods.length > 0 && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
                 {detectedFoods.map((f, i) => (

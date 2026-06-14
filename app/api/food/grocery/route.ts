@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { openai } from "@/lib/openai/client";
 import { createClient } from "@/lib/supabase/server";
-import { FRANCE_SUPERMARKET_RULES } from "@/lib/food/franceSupermarket";
+import { FRANCE_SUPERMARKET_RULES, BUDGET_MEALPREP_RULES } from "@/lib/food/franceSupermarket";
 const CATEGORIES = ["produce", "protein", "dairy", "pantry", "frozen", "bakery", "other"] as const;
 
 export async function POST(req: NextRequest) {
@@ -44,28 +44,32 @@ export async function POST(req: NextRequest) {
 
     const mealList = meals.map((m) => `- ${m.title}${m.description ? `: ${m.description}` : ""}`).join("\n");
 
-    const prompt = `You are a practical grocery list assistant for someone shopping in France.
+    const prompt = `You are a budget-conscious grocery list assistant for someone meal-prepping and shopping in France.
 
 ${FRANCE_SUPERMARKET_RULES}
+
+${BUDGET_MEALPREP_RULES.replace("{num_days}", "7")}
 
 Given these planned meals for the week:
 
 ${mealList}
 ${ingredientList ? `\nKnown ingredients:\n${ingredientList}` : ""}
 
-Return a JSON object with deduplicated grocery items needed to make all these meals:
+Return a JSON object with ONE consolidated, budget-optimised grocery list:
 {
   "items": [
-    { "name": "item name (French supermarket label)", "quantity": "combined amount in metric", "category": "produce" }
+    { "name": "item name (French supermarket label)", "quantity": "bulk amount in metric", "category": "produce" }
   ]
 }
 
 Rules:
-- Merge duplicate ingredients (e.g. "2 tomates" + "1 tomate" → "3 tomates")
+- Merge duplicate ingredients aggressively — one line per product, bulk quantities
+- Prefer the cheapest shoppable option (MDD, basics, seasonal)
+- Minimise unique items — if 5 meals use poulet, one "1 kg blanc de poulet" line not five separate entries
 - category must be one of: produce, protein, dairy, pantry, frozen, bakery, other
-- Include reasonable staples if meals imply them (huile, sel, etc.) only when needed
-- Keep quantities practical for one person or small household
-- Every item must be buyable at a standard French supermarket — use French names and metric units
+- Include staples only when needed (huile, sel, etc.)
+- Keep quantities practical for one person or small household doing meal prep
+- Every item must be buyable at a standard French supermarket — French names, metric units
 - No markdown, just raw JSON`;
 
     const response = await openai.chat.completions.create({
