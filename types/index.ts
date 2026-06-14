@@ -93,6 +93,29 @@ export interface MealPlan {
   title: string;
   description: string | null;
   recipe_url: string | null;
+  source?: "manual" | "scan";
+  image_url?: string | null;
+  created_at: string;
+}
+
+export interface MealIngredient {
+  id: string;
+  user_id: string;
+  meal_plan_id: string;
+  name: string;
+  quantity: string | null;
+  checked: boolean;
+  created_at: string;
+}
+
+export interface GroceryItem {
+  id: string;
+  user_id: string;
+  week_start: string;
+  name: string;
+  quantity: string | null;
+  category: "produce" | "protein" | "dairy" | "pantry" | "frozen" | "bakery" | "other";
+  checked: boolean;
   created_at: string;
 }
 

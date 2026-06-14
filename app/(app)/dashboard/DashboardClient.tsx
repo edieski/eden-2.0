@@ -4,7 +4,7 @@ import Link from "next/link";
 import {
   CheckCircle2, Circle, ArrowRight, Plus,
   MessageCircle, Timer, Frame, Home, Shuffle,
-  BookOpen, Pin, Flame, ClipboardList,
+  BookOpen, Pin, Flame, ClipboardList, Sparkles as SparklesIcon,
 } from "lucide-react";
 import ChibiCharacter from "@/components/features/ChibiCharacter";
 import Card, { CardTitle } from "@/components/ui/Card";
@@ -30,6 +30,7 @@ interface Props {
 }
 
 const QUICK_LINKS = [
+  { label: "Talk It Through", href: "/motivate", icon: SparklesIcon, bg: "#FEF0F3", color: "#C0607A", note: "talk → plan" },
   { label: "Chat with Eden", href: "/chat", icon: MessageCircle, bg: "#F0E4F8", color: "#8040A8", note: "talk it out" },
   { label: "Spin the Wheel", href: "/todos", icon: Shuffle, bg: "#FAE0EC", color: "#C04878", note: "let fate decide" },
   { label: "Focus Timer", href: "/focus", icon: Timer, bg: "#E0F0E8", color: "#407858", note: "lock in" },

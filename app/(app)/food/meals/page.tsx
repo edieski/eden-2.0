@@ -69,6 +69,11 @@ export default function MealPlanPage() {
         <p style={{ fontSize: "12px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9B8E8E", marginBottom: "8px" }}>Nourishment Planning</p>
         <h1 style={{ fontFamily: "var(--font-cormorant), Georgia, serif", fontSize: "40px", fontWeight: 400, color: "#3D3535" }}>Meal <em>Planner</em></h1>
         <p style={{ color: "#9B8E8E", fontSize: "14px", marginTop: "6px" }}>Week of {weekLabel}</p>
+        <p style={{ fontSize: "13px", marginTop: "8px" }}>
+          <a href="/food/plan" style={{ color: "#6A8A68", textDecoration: "underline" }}>
+            Upload meal photos to auto-plan your week →
+          </a>
+        </p>
       </div>
 
       {/* Grid */}

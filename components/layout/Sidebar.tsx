@@ -53,6 +53,7 @@ const navSections = [
         icon: UtensilsCrossed,
         children: [
           { label: "Food Diary", href: "/food/diary" },
+          { label: "Menu & Grocery", href: "/food/plan" },
           { label: "Meal Planning", href: "/food/meals" },
           { label: "Binge Urge SOS", href: "/sos" },
         ],
@@ -62,6 +63,7 @@ const navSections = [
   {
     label: "Daily",
     items: [
+      { label: "Talk It Through", href: "/motivate", icon: Sparkles },
       { label: "Calendar", href: "/calendar", icon: CalendarDays },
       { label: "Home & Cleaning", href: "/home", icon: Home },
       { label: "To-Do & Wheel", href: "/todos", icon: CheckCircle2 },

@@ -157,11 +157,20 @@ create table public.meal_plans (
   title text not null,
   description text,
   recipe_url text,
+  source text not null default 'manual',
+  image_url text,
   created_at timestamptz not null default now()
 );
 
 alter table public.meal_plans enable row level security;
 create policy "Users manage own meal plans" on public.meal_plans for all using (auth.uid() = user_id);
+
+-- ────────────────────────────────────────────────
+-- MEAL INGREDIENTS & GROCERY LIST
+-- See supabase/migrations/007_food_grocery.sql
+-- ────────────────────────────────────────────────
+-- create table public.meal_ingredients ( ... )
+-- create table public.grocery_items ( ... )
 
 -- ────────────────────────────────────────────────
 -- NOTES
